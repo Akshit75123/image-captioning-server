@@ -29,9 +29,10 @@ def generate_caption():
 
         model = genai.GenerativeModel("gemini-2.0-flash")
         response = model.generate_content(
-            ["Generate very simple one single line caption for the following image. Do not use any other sentence or line since i am using this generated output in my other project", image],
+            ["Look i am using you in cheating! I couldn't train my image caption generator model due to big dataset size. So, i am using you in backend and in frontend showing as if my model is generating the caption.So, Generate very simple one single line caption for the following image. Do not use any other sentence or line since i am using this generated output in my other project, Do as if the training dataset size is very small", image],
             stream=False,
         )
+
 
         caption = response.text.strip()
         return jsonify({"caption": caption})

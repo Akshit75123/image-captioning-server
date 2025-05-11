@@ -1,0 +1,45 @@
+from flask import Flask, request, jsonify
+import google.generativeai as genai
+from PIL import Image
+import io
+from flask_cors import CORS
+
+# Enable CORS for all routes
+
+
+
+# Configure Gemini API key
+genai.configure(api_key="AIzaSyDpLr3nlQZ5cCVaCKAd1QXRTEQjkd-ZHpU")
+
+# Initialize the Flask app
+app = Flask(__name__)
+CORS(app)
+
+@app.route("/caption", methods=["POST"])
+def generate_caption():
+    if "image" not in request.files:
+        return jsonify({"error": "No image uploaded"}), 400
+
+    image_file = request.files["image"]
+    if image_file.filename == "":
+        return jsonify({"error": "No image selected"}), 400
+
+    try:
+        # Load the image from the uploaded file
+        image = Image.open(io.BytesIO(image_file.read()))
+
+        # Use Gemini Pro Vision to generate the caption
+        model = genai.GenerativeModel("gemini-2.0-flash")
+        response = model.generate_content(
+            ["Generate very simple one single line caption for the following image. Do not use any other sentence or line since i am using this generated output in my other project", image],
+            stream=False,
+        )
+
+        caption = response.text.strip()
+        return jsonify({"caption": caption})
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == "__main__":
+    app.run(debug=True, port=3000)

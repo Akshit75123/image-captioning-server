@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import google.generativeai as genai
 from PIL import Image
 import io
+import os
 from flask_cors import CORS
 
 # Enable CORS for all routes
@@ -13,7 +14,11 @@ genai.configure(api_key="AIzaSyDpLr3nlQZ5cCVaCKAd1QXRTEQjkd-ZHpU")
 
 # Initialize the Flask app
 app = Flask(__name__)
-CORS(app)
+
+
+CORS(app, origins="*",supports_credentials=True)
+
+
 
 @app.route("/caption", methods=["POST"])
 def generate_caption():
@@ -44,4 +49,3 @@ def generate_caption():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
